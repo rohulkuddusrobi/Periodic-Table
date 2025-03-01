@@ -1,0 +1,320 @@
+:root {
+    --primary-color: #2c3e50;
+    --background-color: #1a1a1a;
+    --text-color: #ecf0f1;
+    --grid-gap: 4px;
+    --element-radius: 8px;
+    --transition-time: 0.3s;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.periodic-table {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(60px, 1fr));
+    gap: var(--grid-gap);
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+.element {
+    aspect-ratio: 1;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--element-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-time) ease;
+    position: relative;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.element:hover {
+    transform: scale(1.1) translateZ(20px);
+    z-index: 1;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.element .symbol {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.element .name {
+    font-size: 0.7em;
+    opacity: 0.8;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.element .atomic-number {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.orbit-view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+}
+
+.element-title {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: var(--text-color);
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.element-title .name {
+    font-size: 1.8em;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.element-title .electron-config {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    color: #a5f3fc;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1em;
+    backdrop-filter: blur(5px);
+    transition: all var(--transition-time) ease;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+#orbitCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Updated Element Categories with modern gradients */
+.alkali-metal { background: linear-gradient(135deg, #ff8a8a 0%, #ff5252 100%); }
+.alkaline-earth { background: linear-gradient(135deg, #ffd280 0%, #ffab40 100%); }
+.transition-metal { background: linear-gradient(135deg, #ffff94 0%, #ffee58 100%); }
+.post-transition-metal { background: linear-gradient(135deg, #cccccc 0%, #9e9e9e 100%); }
+.metalloid { background: linear-gradient(135deg, #98ff98 0%, #69f0ae 100%); }
+.nonmetal { background: linear-gradient(135deg, #87ceeb 0%, #29b6f6 100%); }
+.noble-gas { background: linear-gradient(135deg, #c0c0ff 0%, #7986cb 100%); }
+.lanthanoid { background: linear-gradient(135deg, #ffbfff 0%, #ea80fc 100%); }
+.actinoid { background: linear-gradient(135deg, #ff99cc 0%, #f48fb1 100%); }
+.unknown { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%); }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .periodic-table {
+        grid-template-columns: repeat(18, minmax(45px, 1fr));
+        gap: 2px;
+    }
+
+    .element .symbol {
+        font-size: 1.2em;
+    }
+
+    .element .name {
+        font-size: 0.6em;
+    }
+}
+
+@media (max-width: 768px) {
+    .periodic-table {
+        grid-template-columns: repeat(18, minmax(30px, 1fr));
+        gap: 1px;
+    }
+
+    .element .symbol {
+        font-size: 1em;
+    }
+
+    .element .name {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .element-title {
+        bottom: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: 300px;
+        padding: 15px;
+        font-size: 1.2em;
+    }
+
+    .element-title .symbol {
+        font-size: 2.5em;
+    }
+}
+
+.page-title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--text-color);
+    z-index: 10;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.page-title h1 {
+    font-size: 2.5em;
+    margin: 0;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00ff87 0%, #60efff 50%, #0061ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleGlow 2s ease-in-out infinite alternate;
+    letter-spacing: 1px;
+}
+
+@keyframes titleGlow {
+    from {
+        text-shadow: 0 0 20px rgba(96, 239, 255, 0.2);
+    }
+    to {
+        text-shadow: 0 0 30px rgba(0, 255, 135, 0.4);
+    }
+}
+
+.page-title p {
+    font-size: 1.1em;
+    margin: 5px 0 0;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+@media (max-width: 768px) {
+    .page-title h1 {
+        font-size: 1.8em;
+    }
+    .page-title p {
+        font-size: 0.9em;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading::after {
+    content: '';
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ffffff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: loading 0.8s linear infinite;
+}
+
+@keyframes loading {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
